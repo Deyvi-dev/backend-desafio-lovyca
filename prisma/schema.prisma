@@ -1,0 +1,25 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Service {
+  id          String    @id @default(cuid()) @map("_id")
+  name        String
+  description String
+  price       Float
+  likes       Int
+  dislikes    Int
+  comments    Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid()) @map("_id")
+  text      String
+  service   Service? @relation(fields: [serviceId], references: [id])
+  serviceId String?
+}
