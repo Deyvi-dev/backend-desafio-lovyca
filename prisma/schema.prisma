@@ -12,8 +12,8 @@ model Service {
   name        String
   description String
   price       Float
-  likes       Int
-  dislikes    Int
+  likes       Int       @default(0)
+  dislikes    Int       @default(0)
   comments    Comment[]
 }
 

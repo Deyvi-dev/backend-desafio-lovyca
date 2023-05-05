@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { Service } from '@prisma/client';
+import { UpdateServiceDto } from './dto/update-service.dto';
 
 @Injectable()
 export class ServicesService {
@@ -74,6 +75,23 @@ export class ServicesService {
   async delete(id: string): Promise<Service> {
     return this.prisma.service.delete({
       where: { id },
+    });
+  }
+  async update(
+    id: string,
+    updateServiceDto: UpdateServiceDto,
+  ): Promise<Service> {
+    const service = await this.prisma.service.findUnique({
+      where: { id },
+    });
+
+    return this.prisma.service.update({
+      where: { id },
+      data: {
+        name: updateServiceDto.name ?? service.name,
+        description: updateServiceDto.description ?? service.description,
+        price: updateServiceDto.price ?? service.price,
+      },
     });
   }
 }

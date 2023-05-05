@@ -5,12 +5,15 @@ import {
   Param,
   Post,
   Delete,
+  Put,
+  Patch,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { Service } from '@prisma/client';
+import { UpdateServiceDto } from './dto/update-service.dto';
 
 @Controller('services')
 export class ServicesController {
@@ -82,10 +85,34 @@ export class ServicesController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<void> {
+  async delete(@Param('id') id: string): Promise<object> {
     const service = await this.servicesService.delete(id);
     if (!service) {
       throw new HttpException('Service not found', HttpStatus.NOT_FOUND);
     }
+    return { message: 'Service deleted successfully' };
+  }
+
+  @Patch(':id')
+  async updatePatch(
+    @Param('id') id: string,
+    @Body() updateServiceDto: UpdateServiceDto,
+  ): Promise<Service> {
+    const service = await this.servicesService.update(id, updateServiceDto);
+    if (!service) {
+      throw new HttpException('Service not found', HttpStatus.NOT_FOUND);
+    }
+    return service;
+  }
+  @Put(':id')
+  async updatePut(
+    @Param('id') id: string,
+    @Body() updateServiceDto: UpdateServiceDto,
+  ): Promise<Service> {
+    const service = await this.servicesService.update(id, updateServiceDto);
+    if (!service) {
+      throw new HttpException('Service not found', HttpStatus.NOT_FOUND);
+    }
+    return service;
   }
 }
